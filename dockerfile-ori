@@ -1,0 +1,49 @@
+# Use Ubuntu latest as the base image
+FROM ubuntu:latest
+
+# Install Nginx, PHP-FPM, and necessary PHP extensions
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    nginx \
+    php-fpm \
+    php-mysql \
+    php-iconv \
+    php-ctype \
+    php-json \
+    php-openssl \
+    php-curl \
+    php-zip \
+    php-simplexml \
+    php-spl \
+    php-pcre \
+    php-dom \
+    php-xml \
+    php-gd \
+    php-mbstring \
+    supervisor \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Configure Nginx and PHP-FPM
+RUN mkdir -p /run/php && \
+    echo "daemon off;" >> /etc/nginx/nginx.conf
+
+# Copy Nginx and PHP-FPM configurations
+COPY nginx.conf /etc/nginx/sites-available/default
+COPY php-fpm.conf /etc/php/*/fpm/pool.d/www.conf
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Create web root directory
+RUN mkdir -p /var/www/html
+
+# Copy your application files (optional, volume will override)
+COPY index.php /var/www/html/
+
+# Expose port 80
+EXPOSE 80
+
+# Volume for application files (maps to host machine)
+VOLUME /var/www/html
+
+# Start Supervisor (which manages Nginx & PHP-FPM)
+CMD ["/usr/bin/supervisord", "-n"]
