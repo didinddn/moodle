@@ -1,4 +1,4 @@
-Projek ini adalah untuk membuat image docker untuk kebutuhan LMS Moodle Server.
+Projek ini adalah untuk membuat image docker untuk kebutuhan LMS Moodle Server pada lembaga SMK Negeri 2 jember.
 Base on image ini adalah ubuntu versi terakhir dengan beberapa package tambahan antara lain:
 - nginx
 - php-fpm versi 8.3
